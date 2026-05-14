@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
@@ -12,9 +13,11 @@ export default async function DashboardLayout({
 
   if (!user) redirect('/login')
 
+  const dbUser = await prisma.user.findUnique({ where: { email: user.email! } })
+  const isAdmin = dbUser?.role === 'ADMIN'
+
   return (
     <div className="min-h-screen bg-[#f5f2eb]">
-      {/* Top nav */}
       <nav className="bg-[#1a2e1a] text-[#e8dfc8] px-6 py-4 flex items-center justify-between">
         <div>
           <p className="text-[#b5a06a] text-[10px] tracking-[0.2em] uppercase">Member Portal</p>
@@ -30,6 +33,11 @@ export default async function DashboardLayout({
           <Link href="/dashboard/announcements" className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] transition-colors">
             Announcements
           </Link>
+          {isAdmin && (
+            <Link href="/admin" className="text-xs uppercase tracking-widest text-[#b5a06a] hover:text-[#c9b47e] transition-colors">
+              Admin Panel →
+            </Link>
+          )}
           <form action="/api/auth/signout" method="POST">
             <button type="submit" className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-red-400 transition-colors">
               Sign out

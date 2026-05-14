@@ -35,7 +35,7 @@ export default async function DashboardPage() {
       <div className="bg-[#1a2e1a] rounded-lg px-6 py-5 text-[#e8dfc8] flex items-center justify-between">
         <div>
           <p className="text-[#8fa88f] text-sm">Welcome back</p>
-          <h2 className="font-serif text-2xl">{user?.email}</h2>
+          <h2 className="font-serif text-2xl">{dbUser?.name ?? user?.email}</h2>
         </div>
         <div className="text-right">
           <p className="text-[#b5a06a] text-3xl font-serif">{upcomingRsvps.length}</p>
