@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@layer components {
+  .input {
+    @apply w-full border border-gray-200 rounded px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#b5a06a] transition-colors;
+  }
+}
 :root {
   --background: #ffffff;
   --foreground: #171717;
