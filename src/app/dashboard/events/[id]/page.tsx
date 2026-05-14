@@ -74,11 +74,12 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         <div className="bg-white border border-gray-200 rounded-lg px-5 py-4">
           <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">Your RSVP</p>
           <RsvpButton
-            eventId={event.id}
-            userId={dbUser.id}
-            currentStatus={myRsvp?.status ?? null}
-            spotsLeft={spotsLeft}
-          />
+  eventId={event.id}
+  userId={dbUser.id}
+  currentStatus={myRsvp?.status ?? null}
+  currentGuestCount={myRsvp?.guestCount ?? 1}
+  spotsLeft={spotsLeft}
+/>
         </div>
       )}
     </div>

@@ -19,6 +19,7 @@ export default async function RsvpListPage({ params }: { params: Promise<{ id: s
 
   const going = event.rsvps.filter(r => r.status === 'YES')
   const notGoing = event.rsvps.filter(r => r.status === 'NO')
+  const totalAttending = going.reduce((sum, r) => sum + r.guestCount, 0)
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -34,20 +35,28 @@ export default async function RsvpListPage({ params }: { params: Promise<{ id: s
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-white border border-gray-200 rounded-lg px-5 py-4 text-center">
+          <p className="text-3xl font-serif text-[#1a2e1a]">{totalAttending}</p>
+          <p className="text-xs uppercase tracking-widest text-gray-400 mt-1">Total Attending</p>
+        </div>
         <div className="bg-white border border-gray-200 rounded-lg px-5 py-4 text-center">
           <p className="text-3xl font-serif text-[#1a2e1a]">{going.length}</p>
-          <p className="text-xs uppercase tracking-widest text-gray-400 mt-1">Going</p>
+          <p className="text-xs uppercase tracking-widest text-gray-400 mt-1">RSVPs</p>
         </div>
         <div className="bg-white border border-gray-200 rounded-lg px-5 py-4 text-center">
           <p className="text-3xl font-serif text-[#1a2e1a]">{notGoing.length}</p>
-          <p className="text-xs uppercase tracking-widest text-gray-400 mt-1">Not going</p>
+          <p className="text-xs uppercase tracking-widest text-gray-400 mt-1">Not Going</p>
         </div>
       </div>
 
+      {/* Going list */}
       {going.length > 0 && (
         <div>
-          <h3 className="font-serif text-xl text-[#1a2e1a] mb-3">Going ({going.length})</h3>
+          <h3 className="font-serif text-xl text-[#1a2e1a] mb-3">
+            Going ({going.length} RSVPs · {totalAttending} total people)
+          </h3>
           <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
             {going.map(rsvp => (
               <div key={rsvp.id} className="px-5 py-3 flex items-center justify-between">
@@ -55,15 +64,21 @@ export default async function RsvpListPage({ params }: { params: Promise<{ id: s
                   <p className="text-sm font-medium text-gray-900">{rsvp.user.name}</p>
                   <p className="text-xs text-gray-400">{rsvp.user.email}</p>
                 </div>
-                <p className="text-xs text-gray-400">
-                  {new Date(rsvp.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                </p>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-900">
+                    {rsvp.guestCount} {rsvp.guestCount === 1 ? 'person' : 'people'}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {new Date(rsvp.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
+      {/* Not going list */}
       {notGoing.length > 0 && (
         <div>
           <h3 className="font-serif text-xl text-[#1a2e1a] mb-3">Not going ({notGoing.length})</h3>
