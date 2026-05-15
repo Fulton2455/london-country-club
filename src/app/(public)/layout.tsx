@@ -1,44 +1,84 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
+
+function Nav() {
+  const [open, setOpen] = useState(false)
+
+  const links = [
+    { label: 'About', href: '/about' },
+    { label: 'Membership', href: '/membership' },
+    { label: 'Events', href: '/events' },
+    { label: 'Contact', href: '/contact' },
+  ]
+
+  return (
+    <nav className="bg-[#1a2e1a] text-[#e8dfc8]">
+      <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <Link href="/" onClick={() => setOpen(false)}>
+          <div>
+            <p className="text-[#b5a06a] text-[10px] tracking-[0.2em] uppercase">Est. 1921</p>
+            <h1 className="font-serif text-lg leading-tight">London Country Club</h1>
+          </div>
+        </Link>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-6">
+          {links.map(l => (
+            <Link key={l.href} href={l.href} className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] transition-colors">
+              {l.label}
+            </Link>
+          ))}
+          <Link href="/login" className="text-xs uppercase tracking-widest bg-[#b5a06a] text-[#1a2e1a] px-4 py-2 rounded font-semibold hover:bg-[#c9b47e] transition-colors">
+            Member Login
+          </Link>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden flex flex-col gap-1.5 p-2"
+          onClick={() => setOpen(o => !o)}
+          aria-label="Toggle menu"
+        >
+          <span className={`block w-6 h-0.5 bg-[#e8dfc8] transition-transform duration-200 ${open ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-[#e8dfc8] transition-opacity duration-200 ${open ? 'opacity-0' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-[#e8dfc8] transition-transform duration-200 ${open ? '-rotate-45 -translate-y-2' : ''}`} />
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      {open && (
+        <div className="md:hidden border-t border-white/10 px-4 py-4 space-y-3">
+          {links.map(l => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="block text-sm uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] py-2 transition-colors"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className="block text-center text-sm uppercase tracking-widest bg-[#b5a06a] text-[#1a2e1a] px-4 py-2.5 rounded font-semibold hover:bg-[#c9b47e] transition-colors mt-2"
+          >
+            Member Login
+          </Link>
+        </div>
+      )}
+    </nav>
+  )
+}
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#f5f2eb]">
-      {/* Nav */}
-      <nav className="bg-[#1a2e1a] text-[#e8dfc8]">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/">
-            <div>
-              <p className="text-[#b5a06a] text-[10px] tracking-[0.2em] uppercase">Est. 1921</p>
-              <h1 className="font-serif text-xl leading-tight">London Country Club</h1>
-            </div>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/about" className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] transition-colors hidden sm:block">
-              About
-            </Link>
-            <Link href="/membership" className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] transition-colors hidden sm:block">
-              Membership
-            </Link>
-            <Link href="/events" className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] transition-colors hidden sm:block">
-              Events
-            </Link>
-            <Link href="/contact" className="text-xs uppercase tracking-widest text-[#8fa88f] hover:text-[#b5a06a] transition-colors hidden sm:block">
-              Contact
-            </Link>
-            <Link
-              href="/login"
-              className="text-xs uppercase tracking-widest bg-[#b5a06a] text-[#1a2e1a] px-4 py-2 rounded font-semibold hover:bg-[#c9b47e] transition-colors"
-            >
-              Member Login
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Page content */}
+      <Nav />
       {children}
 
-      {/* Footer */}
       <footer className="bg-[#1a2e1a] text-[#8fa88f] mt-20">
         <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
@@ -69,9 +109,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <div className="space-y-2 text-sm">
               <p>1199 Spring Valley Road</p>
               <p>London, Ohio 43140</p>
-              <a href="tel:7408521762" className="block hover:text-[#b5a06a] transition-colors">
-                740-852-1762
-              </a>
+              <a href="tel:7408521762" className="block hover:text-[#b5a06a] transition-colors">740-852-1762</a>
             </div>
           </div>
         </div>
