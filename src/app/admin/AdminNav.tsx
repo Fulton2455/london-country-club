@@ -7,12 +7,14 @@ export default function AdminNav() {
   const [open, setOpen] = useState(false)
 
   const links = [
-    { label: 'Overview', href: '/admin' },
-    { label: 'Events', href: '/admin/events' },
-    { label: 'Announcements', href: '/admin/announcements' },
-    { label: 'Members', href: '/admin/members' },
-    { label: 'Invites', href: '/admin/invites' },
-  ]
+  { label: 'Overview', href: '/admin' },
+  { label: 'Check-In', href: '/admin/checkin' },
+  { label: 'Events', href: '/admin/events' },
+  { label: 'Announcements', href: '/admin/announcements' },
+  { label: 'Members', href: '/admin/members' },
+  { label: 'Rounds', href: '/admin/rounds' },
+  { label: 'Invites', href: '/admin/invites' },
+]
 
   return (
     <nav className="bg-[#1a2e1a] text-[#e8dfc8]">

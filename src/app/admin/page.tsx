@@ -2,11 +2,15 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 
 export default async function AdminPage() {
-  const [eventCount, userCount, announcementCount, pendingInvites] = await Promise.all([
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const [eventCount, userCount, announcementCount, pendingInvites, todayRounds] = await Promise.all([
     prisma.event.count(),
     prisma.user.count(),
     prisma.announcement.count(),
     prisma.invite.count({ where: { usedAt: null } }),
+    prisma.roundLog.count({ where: { createdAt: { gte: today } } }),
   ])
 
   const recentRsvps = await prisma.rsvp.findMany({
@@ -19,13 +23,14 @@ export default async function AdminPage() {
     <div className="space-y-8">
       <h2 className="font-serif text-3xl text-[#1a2e1a]">Overview</h2>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {[
           { label: 'Total Events', value: eventCount, href: '/admin/events' },
-          { label: 'Members', value: userCount, href: '/admin/invites' },
+          { label: 'Members', value: userCount, href: '/admin/members' },
           { label: 'Announcements', value: announcementCount, href: '/admin/announcements' },
           { label: 'Pending Invites', value: pendingInvites, href: '/admin/invites' },
+          { label: "Today's Rounds", value: todayRounds, href: '/admin/checkin' },
+          { label: 'Round Tracking', value: '→', href: '/admin/rounds' },
         ].map(stat => (
           <Link key={stat.label} href={stat.href}>
             <div className="bg-white border border-gray-200 rounded-lg px-5 py-4 hover:border-[#b5a06a] transition-colors">
@@ -36,7 +41,6 @@ export default async function AdminPage() {
         ))}
       </div>
 
-      {/* Recent RSVPs */}
       <div>
         <h3 className="font-serif text-xl text-[#1a2e1a] mb-4">Recent RSVPs</h3>
         {recentRsvps.length === 0 ? (
@@ -50,9 +54,7 @@ export default async function AdminPage() {
                   <p className="text-xs text-gray-500">{rsvp.event.title}</p>
                 </div>
                 <span className={`text-xs uppercase tracking-widest px-2 py-0.5 rounded ${
-                  rsvp.status === 'YES'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-500'
+                  rsvp.status === 'YES' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
                 }`}>
                   {rsvp.status === 'YES' ? 'Going' : 'Not going'}
                 </span>

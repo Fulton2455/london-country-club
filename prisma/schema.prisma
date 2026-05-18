@@ -17,6 +17,7 @@ model User {
 
   rsvps     Rsvp[]
   invites   Invite[] @relation("InviteCreator")
+  roundsLogged  RoundLog[]  @relation("RoundLoggedBy")
 }
 
 enum Role {
@@ -81,4 +82,15 @@ model Invite {
 
   createdById String
   createdBy   User   @relation("InviteCreator", fields: [createdById], references: [id])
+}
+
+model RoundLog {
+  id        String   @id @default(uuid())
+  memberName String
+  date      DateTime @default(now())
+  guests    String[] @default([])
+  notes     String?
+  loggedById String
+  loggedBy  User     @relation("RoundLoggedBy", fields: [loggedById], references: [id])
+  createdAt DateTime @default(now())
 }
